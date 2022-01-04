@@ -10,11 +10,11 @@ contract NFTShare is ERC20 {
         string memory symbol,
         uint256 mintSupply,
         address mintTo
-    ) ERC20(name, symbol, 18) {
+    ) payable ERC20(name, symbol, 18) {
         _mint(mintTo, mintSupply);
     }
 
-    function burnFrom(address from, uint256 amount) public {
+    function burnFrom(address from, uint256 amount) public payable {
         uint256 allowed = allowance[from][msg.sender]; // Saves gas for limited approvals.
 
         if (allowed != type(uint256).max)
@@ -86,7 +86,7 @@ contract LilFractional {
         address,
         uint256,
         bytes memory
-    ) public virtual returns (bytes4) {
+    ) public payable returns (bytes4) {
         return this.onERC721Received.selector;
     }
 }
