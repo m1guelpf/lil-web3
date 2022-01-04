@@ -14,7 +14,7 @@ The key learning here is that the technical implementation of a namespace can be
 
 If you're interested in a slightly more comprehensive ENS-like implementation, I also built a simplified version of the base ENS contracts (and tests for them) following the [ENS spec](https://eips.ethereum.org/EIPS/eip-137) as [a separate repo](https://github.com/m1guelpf/ens-contracts-blindrun).
 
-[Contract Source](src/LilENS.sol) • [Contract Tests](src/tests/LilENS.t.sol)
+[Contract Source](src/LilENS.sol) • [Contract Tests](src/test/LilENS.t.sol)
 
 ## lil opensea
 
@@ -24,7 +24,7 @@ lil opensea has three functions, allowing users to list their NFTs for sale (`li
 
 > Note: Remember to call `setApprovalForAll(<lil opensea address>, true)` on the contract for the NFT you're listing before calling the `list` function 😉
 
-[Contract Source](src/LilOpenSea.sol) • [Contract Tests](src/tests/LilOpenSea.t.sol)
+[Contract Source](src/LilOpenSea.sol) • [Contract Tests](src/test/LilOpenSea.t.sol)
 
 ## lil fractional
 
@@ -34,7 +34,7 @@ lil fractional contains a `split(ERC721 nftContract, uint256 tokenId, uint256 su
 
 > Note: Remember to call `setApprovalForAll(<lil fractional address>, true)` on the contract for the NFT you're fractionalising before calling the `split` function, and to call `approve(<lil fractional address>, <supply or greater>)` on the contract for the ERC20 before calling the `join` function 😉
 
-[Contract Source](src/LilFractional.sol) • [Contract Tests](src/tests/LilFractional.t.sol)
+[Contract Source](src/LilFractional.sol) • [Contract Tests](src/test/LilFractional.t.sol)
 
 ## Contributing
 
