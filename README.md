@@ -36,6 +36,16 @@ lil fractional contains a `split(ERC721 nftContract, uint256 tokenId, uint256 su
 
 [Contract Source](src/LilFractional.sol) • [Contract Tests](src/test/LilFractional.t.sol)
 
+## lil juicebox
+
+> Very simple token sale + refund manager.
+
+lil juicebox allows users to participate in a fundraising campaign by sending ETH via the `contribute()` function, in exchange for a proportional share of ERC20 tokens, until the owner decides to close the campaign (`setState(State.CLOSED)`) and withdraw the funds (calling `withdraw()`). If the owner decides to issue refunds (`setState(State.REFUNDING)`) they can send all the ETH back to the contract, where users can burn their ERC20 tokens to get back their ETH (using `refund(uint256 amount)`). Finally, the owner can renounce ownership of the campaign (making it impossible to change any of the aforementioned settings) by calling `renounce()`.
+
+> Note: Remember to call `approve(<lil juicebox address>, <amount of tokens to refund>)` on the contract for the ERC20 before calling the `refund` function 😉
+
+[Contract Source](src/LilJuicebox.sol) • [Contract Tests](src/test/LilJuicebox.t.sol)
+
 ## Contributing
 
 Part of the motivation behind lil web3 is to get better at Solidity. For this reason, I won't be accepting PRs that add new lil contracts, as I'd rather implement them myself.
