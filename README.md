@@ -50,7 +50,7 @@ lil juicebox allows users to participate in a fundraising campaign by sending ET
 
 > A (Proof of Concept)-level flash loan implementation
 
-lil flashloan allows contract implementing the `onFlashLoan(ERC20 token, uint256 amount, bytes data)` to temporally receive any amount of ERC20 tokens (limited by the loaner's supply ofc), by calling the `execute(FlashBorrower receiver, ERC20 token, uint256 amount, bytes data)` function. This tokens should be repaid (along with any fees) before the end of the transaction to prevent it from reverting. The owner of the contract can set a fee percentage for any ERC20 by calling `setFees(address token, uint256 fee)` (`fee` is a percentage multiplied by 100 to avoid decimals, `10_00` would be 10% for example), and can withdraw the contract's balance by calling `withdraw(ERC20 token, uint256 amount)`.
+lil flashloan allows contract implementing the `onFlashLoan(ERC20 token, uint256 amount, bytes data)` to temporally receive any amount of ERC20 tokens (limited by the loaner's supply ofc), by calling the `execute(FlashBorrower receiver, ERC20 token, uint256 amount, bytes data)` function. This tokens should be repaid (along with any fees) before the end of the transaction to prevent it from reverting. The owner of the contract can set a fee percentage for any ERC20 by calling `setFees(ERC20 token, uint256 fee)` (`fee` is a percentage multiplied by 100 to avoid decimals, `10_00` would be 10% for example), and can withdraw the contract's balance by calling `withdraw(ERC20 token, uint256 amount)`.
 
 > Note: In order to keep the contract simple, it's not compliant with [EIP-3156](https://eips.ethereum.org/EIPS/eip-3156) (the flash loan standard).
 

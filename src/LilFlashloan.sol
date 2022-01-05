@@ -16,9 +16,17 @@ contract LilFlashloan {
     error InvalidPercentage();
     error TokensNotReturned();
 
+    event FeeUpdated(ERC20 indexed token, uint256 fee);
+    event Withdrawn(ERC20 indexed token, uint256 amount);
+    event Flashloaned(
+        FlashBorrower indexed receiver,
+        ERC20 indexed token,
+        uint256 amount
+    );
+
     address public immutable manager;
 
-    mapping(address => uint256) public fees;
+    mapping(ERC20 => uint256) public fees;
 
     constructor() payable {
         manager = msg.sender;
@@ -32,17 +40,18 @@ contract LilFlashloan {
     ) public payable {
         uint256 currentBalance = token.balanceOf(address(this));
 
-        token.transfer(address(receiver), amount);
+        emit Flashloaned(receiver, token, amount);
 
+        token.transfer(address(receiver), amount);
         receiver.onFlashLoan(token, amount, data);
 
         if (
-            currentBalance + getFee(address(token), amount) >
+            currentBalance + getFee(token, amount) >
             token.balanceOf(address(this))
         ) revert TokensNotReturned();
     }
 
-    function getFee(address token, uint256 amount)
+    function getFee(ERC20 token, uint256 amount)
         public
         payable
         returns (uint256)
@@ -53,15 +62,19 @@ contract LilFlashloan {
     }
 
     // Fees are a percentage, multiplied by 100 to avoid decimals (for example, 10% is 10_00)
-    function setFees(address token, uint256 fee) public payable {
+    function setFees(ERC20 token, uint256 fee) public payable {
         if (msg.sender != manager) revert Unauthorized();
         if (fee > 100_00) revert InvalidPercentage();
+
+        emit FeeUpdated(token, fee);
 
         fees[token] = fee;
     }
 
     function withdraw(ERC20 token, uint256 amount) public payable {
         if (msg.sender != manager) revert Unauthorized();
+
+        emit Withdrawn(token, amount);
 
         token.transfer(msg.sender, amount);
     }

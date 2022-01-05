@@ -43,10 +43,7 @@ contract TestReceiver is FlashBorrower, DSTest {
 
         if (!shouldPayFees) return;
 
-        uint256 owedFees = LilFlashloan(msg.sender).getFee(
-            address(token),
-            amount
-        );
+        uint256 owedFees = LilFlashloan(msg.sender).getFee(token, amount);
         TestToken(address(token)).mintTo(msg.sender, owedFees);
     }
 }
@@ -58,7 +55,14 @@ contract LilFlashloanTest is DSTest {
     TestReceiver internal receiver;
     LilFlashloan internal lilFlashloan;
 
+    event FeeUpdated(ERC20 indexed token, uint256 fee);
+    event Withdrawn(ERC20 indexed token, uint256 amount);
     event Transfer(address indexed from, address indexed to, uint256 amount);
+    event Flashloaned(
+        FlashBorrower indexed receiver,
+        ERC20 indexed token,
+        uint256 amount
+    );
 
     function setUp() public {
         user = new User();
@@ -71,6 +75,8 @@ contract LilFlashloanTest is DSTest {
     function testCanFlashloan() public {
         token.mintTo(address(lilFlashloan), 100 ether);
 
+        hevm.expectEmit(true, true, false, true);
+        emit Flashloaned(receiver, token, 100 ether);
         hevm.expectEmit(true, true, false, true);
         emit Transfer(address(lilFlashloan), address(receiver), 100 ether);
         hevm.expectEmit(true, true, false, true);
@@ -92,7 +98,7 @@ contract LilFlashloanTest is DSTest {
         token.mintTo(address(lilFlashloan), 100 ether);
 
         // set 10% fee for token
-        lilFlashloan.setFees(address(token), 10_00);
+        lilFlashloan.setFees(token, 10_00);
 
         lilFlashloan.execute(receiver, token, 100 ether, "");
 
@@ -123,7 +129,7 @@ contract LilFlashloanTest is DSTest {
         receiver.setRespectFees(false);
 
         // set 10% fee for token
-        lilFlashloan.setFees(address(token), 10_00);
+        lilFlashloan.setFees(token, 10_00);
 
         token.mintTo(address(lilFlashloan), 100 ether);
 
@@ -134,36 +140,42 @@ contract LilFlashloanTest is DSTest {
     }
 
     function testManagerCanSetFees() public {
-        assertEq(lilFlashloan.fees(address(token)), 0);
+        assertEq(lilFlashloan.fees(token), 0);
+
+        hevm.expectEmit(true, false, false, true);
+        emit FeeUpdated(token, 10_00);
 
         // set 10% fee for token
-        lilFlashloan.setFees(address(token), 10_00);
+        lilFlashloan.setFees(token, 10_00);
 
-        assertEq(lilFlashloan.fees(address(token)), 10_00);
+        assertEq(lilFlashloan.fees(token), 10_00);
     }
 
     function testCannotSetFeesHigherThan100Percent() public {
-        assertEq(lilFlashloan.fees(address(token)), 0);
+        assertEq(lilFlashloan.fees(token), 0);
 
         hevm.expectRevert(abi.encodeWithSignature("InvalidPercentage()"));
-        lilFlashloan.setFees(address(token), 101_00);
+        lilFlashloan.setFees(token, 101_00);
 
-        assertEq(lilFlashloan.fees(address(token)), 0);
+        assertEq(lilFlashloan.fees(token), 0);
     }
 
     function testNonManagerCannotSetFees() public {
-        assertEq(lilFlashloan.fees(address(token)), 0);
+        assertEq(lilFlashloan.fees(token), 0);
 
         hevm.prank(address(user));
         hevm.expectRevert(abi.encodeWithSignature("Unauthorized()"));
-        lilFlashloan.setFees(address(token), 10_00);
+        lilFlashloan.setFees(token, 10_00);
 
-        assertEq(lilFlashloan.fees(address(token)), 0);
+        assertEq(lilFlashloan.fees(token), 0);
     }
 
     function testManagerCanWithdrawTokens() public {
         token.mintTo(address(lilFlashloan), 10 ether);
         assertEq(token.balanceOf(address(this)), 0);
+
+        hevm.expectEmit(true, false, false, true);
+        emit Withdrawn(token, 10 ether);
 
         lilFlashloan.withdraw(token, 10 ether);
 
