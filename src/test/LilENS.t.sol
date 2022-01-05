@@ -36,4 +36,23 @@ contract LilENSTest is DSTest {
 
         assertEq(lilENS.lookup("test"), address(this));
     }
+
+    function testCanUpdate() public {
+        lilENS.register("test");
+        assertEq(lilENS.lookup("test"), address(this));
+
+        lilENS.update("test", address(user));
+        assertEq(lilENS.lookup("test"), address(user));
+    }
+
+    function testNonOwnerCannotUpdate() public {
+        lilENS.register("test");
+        assertEq(lilENS.lookup("test"), address(this));
+
+        hevm.prank(address(user));
+        hevm.expectRevert(abi.encodeWithSignature("Unauthorized()"));
+        lilENS.update("test", address(user));
+
+        assertEq(lilENS.lookup("test"), address(this));
+    }
 }
