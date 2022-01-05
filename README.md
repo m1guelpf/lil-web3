@@ -46,6 +46,16 @@ lil juicebox allows users to participate in a fundraising campaign by sending ET
 
 [Contract Source](src/LilJuicebox.sol) • [Contract Tests](src/test/LilJuicebox.t.sol)
 
+## lil flashloan
+
+> A (Proof of Concept)-level flash loan implementation
+
+lil flashloan allows contract implementing the `onFlashLoan(ERC20 token, uint256 amount, bytes data)` to temporally receive any amount of ERC20 tokens (limited by the loaner's supply ofc), by calling the `execute(FlashBorrower receiver, ERC20 token, uint256 amount, bytes data)` function. This tokens should be repaid (along with any fees) before the end of the transaction to prevent it from reverting. The owner of the contract can set a fee percentage for any ERC20 by calling `setFees(address token, uint256 fee)` (`fee` is a percentage multiplied by 100 to avoid decimals, `10_00` would be 10% for example), and can withdraw the contract's balance by calling `withdraw(ERC20 token, uint256 amount)`.
+
+> Note: In order to keep the contract simple, it's not compliant with [EIP-3156](https://eips.ethereum.org/EIPS/eip-3156) (the flash loan standard).
+
+[Contract Source](src/LilFlashloan.sol) • [Contract Tests](src/test/LilFlashloan.t.sol)
+
 ## Contributing
 
 Part of the motivation behind lil web3 is to get better at Solidity. For this reason, I won't be accepting PRs that add new lil contracts, as I'd rather implement them myself.
