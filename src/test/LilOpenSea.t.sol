@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import "ds-test/test.sol";
 import "./Hevm.sol";
+import "ds-test/test.sol";
 import "../LilOpenSea.sol";
 import "solmate/tokens/ERC721.sol";
 
@@ -17,7 +17,7 @@ contract TestNFT is ERC721("Test NFT", "TEST") {
         return "test";
     }
 
-    function mint() public returns (uint256) {
+    function mint() public payable returns (uint256) {
         _mint(msg.sender, tokenId);
 
         return tokenId++;
