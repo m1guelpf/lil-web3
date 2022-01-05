@@ -94,7 +94,7 @@ contract LilJuiceboxTest is DSTest {
         assertEq(token.balanceOf(address(user)), 0);
 
         hevm.prank(address(user));
-        hevm.expectRevert(stdError.arithmeticError); // error comes from ERC721 impl. (solmate in this test)
+        hevm.expectRevert(stdError.arithmeticError); // error comes from ERC20 impl. (solmate in this test)
         lilJuicebox.refund(10_000_000 ether);
 
         assertEq(address(lilJuicebox).balance, 10 ether);
