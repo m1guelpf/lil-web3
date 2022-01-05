@@ -56,6 +56,16 @@ lil flashloan allows contract implementing the `onFlashLoan(ERC20 token, uint256
 
 [Contract Source](src/LilFlashloan.sol) • [Contract Tests](src/test/LilFlashloan.t.sol)
 
+## lil gnosis
+
+> An optimised ERC721-based multisig implementation
+
+lil gnosis allows you to define a set of approved signers and the number of required signatures to execute a transaction (or change the configuration params) when deploying the contract `LilGnosis(string name, address[] signers, uint256 quorum)`. Once deployed, signers can craft [EIP-721 signatures](https://eips.ethereum.org/EIPS/eip-712) (using the `Execute(address target,uint256 value,bytes payload,uint256 nonce)` signature) to execute any transaction by calling the `execute(address target, uint256 value, bytes payload, Signature[] signatures)` function. You can also update the number of required signatures by calling the `setQuorum(uint256 quorum, Signature[] sigs)` function, or add and remove trusted signers by calling `setSigner(address signer, bool shouldTrust, Signature[] sigs)`.
+
+> Note: For implementation reasons, when building the array of signatures, you need to order them in ascending order by the address that signed them. If you don't do this, the verification will fail!
+
+[Contract Source](src/LilGnosis.sol) • [Contract Tests](src/test/LilGnosis.t.sol)
+
 ## Contributing
 
 Part of the motivation behind lil web3 is to get better at Solidity. For this reason, I won't be accepting PRs that add new lil contracts, as I'd rather implement them myself.
