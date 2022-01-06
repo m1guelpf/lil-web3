@@ -13,6 +13,7 @@ contract ProjectShare is ERC20 {
     /// @notice Thrown when trying to directly call the mint or burn functions
     error Unauthorized();
 
+    /// @notice The manager of this campaign
     address public immutable manager;
 
     /// @notice Deploys a ProjectShare instance with the specified name and symbol
