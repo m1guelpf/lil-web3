@@ -22,7 +22,7 @@ contract TestNFT is ERC721("Test NFT", "TEST") {
     }
 }
 
-contract LilOpenSeaTest is DSTest {
+contract LilFractionalTest is DSTest {
     uint256 nftId;
     User internal user;
     Hevm internal hevm;
