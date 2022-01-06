@@ -102,7 +102,7 @@ contract LilJuiceboxTest is DSTest {
         assertEq(address(user).balance, 0);
     }
 
-    function testOwnerCanWithdrawFunds() public {
+    function testManagerCanWithdrawFunds() public {
         hevm.deal(address(lilJuicebox), 10 ether);
 
         uint256 initialBalance = address(this).balance;
@@ -114,7 +114,7 @@ contract LilJuiceboxTest is DSTest {
         assertEq(address(this).balance, initialBalance + 10 ether);
     }
 
-    function testNonOwnerCannotWithdrawFunds() public {
+    function testNonManagerCannotWithdrawFunds() public {
         hevm.deal(address(lilJuicebox), 10 ether);
 
         uint256 initialBalance = address(user).balance;
@@ -126,7 +126,7 @@ contract LilJuiceboxTest is DSTest {
         assertEq(address(user).balance, initialBalance);
     }
 
-    function testOwnerCanSetState() public {
+    function testManagerCanSetState() public {
         assertEq(
             uint256(lilJuicebox.getState()),
             uint256(LilJuicebox.State.OPEN)
@@ -142,7 +142,7 @@ contract LilJuiceboxTest is DSTest {
         );
     }
 
-    function testNonOwnerCannotSetState() public {
+    function testNonManagerCannotSetState() public {
         assertEq(
             uint256(lilJuicebox.getState()),
             uint256(LilJuicebox.State.OPEN)
@@ -158,24 +158,24 @@ contract LilJuiceboxTest is DSTest {
         );
     }
 
-    function testOwnerCanRenounceOwnership() public {
-        assertEq(lilJuicebox.owner(), address(this));
+    function testManagerCanRenounceOwnership() public {
+        assertEq(lilJuicebox.manager(), address(this));
 
         hevm.expectEmit(false, false, false, true);
         emit Renounced();
         lilJuicebox.renounce();
 
-        assertEq(lilJuicebox.owner(), address(0));
+        assertEq(lilJuicebox.manager(), address(0));
     }
 
-    function testNonOwnerCannotRenounceOwnership() public {
-        assertEq(lilJuicebox.owner(), address(this));
+    function testNonManagerCannotRenounceOwnership() public {
+        assertEq(lilJuicebox.manager(), address(this));
 
         hevm.prank(address(user));
         hevm.expectRevert(abi.encodeWithSignature("Unauthorized()"));
         lilJuicebox.renounce();
 
-        assertEq(lilJuicebox.owner(), address(this));
+        assertEq(lilJuicebox.manager(), address(this));
     }
 
     receive() external payable {}
