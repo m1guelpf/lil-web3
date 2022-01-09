@@ -70,7 +70,7 @@ lil gnosis allows you to define a set of approved signers and the number of requ
 
 Part of the motivation behind lil web3 is to get better at Solidity. For this reason, I won't be accepting PRs that add new lil contracts, as I'd rather implement them myself.
 
-That doesn't mean contributions are welcome tho! If you find a bug, gas optimisation, or there's something you'd have written differently, a PR will be very appreciated. New ideas for protocols/apps you'd like to see me try to build are also very welcome!
+That doesn't mean contributions aren't welcome tho! If you find a bug, gas optimisation, or there's something you'd have written differently, a PR will be very appreciated. New ideas for protocols/apps you'd like to see me try to build are also very welcome!
 
 ## License
 
