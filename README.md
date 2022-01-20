@@ -66,6 +66,16 @@ lil gnosis allows you to define a set of approved signers and the number of requ
 
 [Contract Source](src/LilGnosis.sol) • [Contract Tests](src/test/LilGnosis.t.sol)
 
+## lil superfluid
+
+> A simple token streaming implementation
+
+lil superfluid enables anyone to continously stream tokens to a user during an interval of blocks. You can call the `streamTo(address recipient, ERC20 token, uint256 initialBalance, Timeframe timeframe, uint256 paymentPerBlock)` function to send `paymentPerBlock` every block the stream is active for (between by `timeframe.startBlock` and `timeframe.stopBlock`) to `recipient`, locking `initialBalance` tokens to guarantee their delivery. Once created, the sender can increase the locked balance by calling the `refuel(uint256 streamId, uint256 amount)` function, and the receiver can withdraw their current balance at any time by calling `withdraw(uint256 streamId)`. Once the stream has ended, the sender can call `refund(uint256 streamId)` to withdraw any excess locked funds, and at any point any party can view their balance through `balanceOf(uint256 streamId, address who)`, or update the stream rate or timeframe through by providing an [EIP-712 signature](https://eips.ethereum.org/EIPS/eip-712) from the other party (certifying they approve of it) to the `updateDetails(uint256 streamId, uint256 paymentPerBlock, Timeframe timeframe, Signature sig)` function.
+
+> Note: Remember to call `approve(<lil superfluid address>, <amount>)` on the contract for the ERC20 before calling the `streamTo` and `refuel` functions 😉
+
+[Contract Source](src/LilSuperfluid.sol) • [Contract Tests](src/test/LilSuperfluid.t.sol)
+
 ## Contributing
 
 Part of the motivation behind lil web3 is to get better at Solidity. For this reason, I won't be accepting PRs that add new lil contracts, as I'd rather implement them myself.
