@@ -39,7 +39,8 @@ contract LilGnosis {
 
 	/// @notice Signature nonce, incremented with each successful execution or state change
 	/// @dev This is used to prevent signature reuse
-	uint256 public nonce;
+	/// @dev Initialised at 1 because it makes the first transaction slightly cheaper
+	uint256 public nonce = 1;
 
 	/// @notice The amount of required signatures to execute a transaction or change the state
 	uint256 public quorum;
