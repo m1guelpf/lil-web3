@@ -113,7 +113,7 @@ contract LilSuperfluid {
 		);
 	}
 
-	/// @notice Create a stream stream that continously delivers tokens to `recipient`
+	/// @notice Create a stream that continously delivers tokens to `recipient`
 	/// @param recipient The address that will receive the streamed tokens
 	/// @param token The ERC20 token that will get streamed
 	/// @param initialBalance How many ERC20 tokens to lock on the contract. Note that only the locked amount is guaranteed to be delivered to `recipient`
