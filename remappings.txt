@@ -1,3 +1,2 @@
-weird-erc20/=lib/solmate/lib/weird-erc20/src/
 ds-test/=lib/ds-test/src/
 solmate/=lib/solmate/src/
