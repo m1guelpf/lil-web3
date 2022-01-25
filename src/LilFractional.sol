@@ -114,7 +114,7 @@ contract LilFractional {
 	function join(uint256 vaultId) public payable {
 		Vault memory vault = getVault[vaultId];
 
-		if (vault.tokenContract == NFTShare(address(0))) revert VaultNotFound();
+		if (address(vault.tokenContract) == address(0)) revert VaultNotFound();
 
 		delete getVault[vaultId];
 

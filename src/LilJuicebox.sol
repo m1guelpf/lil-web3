@@ -130,9 +130,9 @@ contract LilJuicebox {
 			refundETH := div(amount, TOKENS_PER_ETH)
 		}
 
-		token.burn(msg.sender, amount);
 		emit Refunded(msg.sender, refundETH);
 
+		token.burn(msg.sender, amount);
 		SafeTransferLib.safeTransferETH(msg.sender, refundETH);
 	}
 
@@ -152,6 +152,7 @@ contract LilJuicebox {
 		if (msg.sender != manager) revert Unauthorized();
 
 		getState = state;
+
 		emit StateUpdated(state);
 	}
 
