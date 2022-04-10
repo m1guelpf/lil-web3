@@ -1,0 +1,10 @@
+# The Default Profile
+[default]
+optimizer = true
+fuzz_runs = 1_000
+bytecode_hash = "ipfs"
+optimizer_runs = 1_000
+
+# Extreme Fuzzing CI Profile :P
+[ci]
+fuzz_runs = 100_000
