@@ -21,4 +21,4 @@ jobs:
           version: nightly
 
       - name: Run tests
-        run: FOUNDRY_PROFILE=ci forge test -vvv --gas-report
+        run: forge test -vvv --gas-report
