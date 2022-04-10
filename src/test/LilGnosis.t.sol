@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import './Hevm.sol';
-import '../LilGnosis.sol';
-import 'ds-test/test.sol';
+import { Vm } from 'forge-std/Vm.sol';
+import { DSTest } from 'ds-test/test.sol';
+import { LilGnosis } from '../LilGnosis.sol';
+import { stdError } from 'forge-std/stdlib.sol';
 
 contract User {}
 
@@ -33,8 +34,8 @@ contract CallTestUtils is DSTest {
 }
 
 abstract contract SigUtils {
-	Hevm internal hevm;
 	LilGnosis internal lilGnosis;
+	Vm internal hevm;
 
 	function signExecution(
 		uint256 signer,
@@ -48,7 +49,15 @@ abstract contract SigUtils {
 				abi.encodePacked(
 					'\x19\x01',
 					lilGnosis.domainSeparator(),
-					keccak256(abi.encode(lilGnosis.EXECUTE_HASH(), target, value, payload, lilGnosis.nonce()))
+					keccak256(
+						abi.encode(
+							lilGnosis.EXECUTE_HASH(),
+							target,
+							value,
+							payload,
+							lilGnosis.nonce()
+						)
+					)
 				)
 			)
 		);
@@ -56,7 +65,10 @@ abstract contract SigUtils {
 		return LilGnosis.Signature({ v: v, r: r, s: s });
 	}
 
-	function signQuorum(uint256 signer, uint256 quorum) internal returns (LilGnosis.Signature memory) {
+	function signQuorum(uint256 signer, uint256 quorum)
+		internal
+		returns (LilGnosis.Signature memory)
+	{
 		(uint8 v, bytes32 r, bytes32 s) = hevm.sign(
 			signer,
 			keccak256(
@@ -82,7 +94,9 @@ abstract contract SigUtils {
 				abi.encodePacked(
 					'\x19\x01',
 					lilGnosis.domainSeparator(),
-					keccak256(abi.encode(lilGnosis.SIGNER_HASH(), addr, shouldTrust, lilGnosis.nonce()))
+					keccak256(
+						abi.encode(lilGnosis.SIGNER_HASH(), addr, shouldTrust, lilGnosis.nonce())
+					)
 				)
 			)
 		);
@@ -105,7 +119,7 @@ contract LilGnosisTest is DSTest, SigUtils {
 
 	function setUp() public {
 		user = new User();
-		hevm = Hevm(HEVM_ADDRESS);
+		hevm = Vm(HEVM_ADDRESS);
 		target = new CallTestUtils();
 
 		// Get addresses from the private keys above

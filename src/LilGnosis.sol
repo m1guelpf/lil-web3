@@ -53,10 +53,12 @@ contract LilGnosis {
 	mapping(address => bool) public isSigner;
 
 	/// @dev EIP-712 types for a signature that updates the quorum
-	bytes32 public constant QUORUM_HASH = keccak256('UpdateQuorum(uint256 newQuorum,uint256 nonce)');
+	bytes32 public constant QUORUM_HASH =
+		keccak256('UpdateQuorum(uint256 newQuorum,uint256 nonce)');
 
 	/// @dev EIP-712 types for a signature that updates a signer state
-	bytes32 public constant SIGNER_HASH = keccak256('UpdateSigner(address signer,bool shouldTrust,uint256 nonce)');
+	bytes32 public constant SIGNER_HASH =
+		keccak256('UpdateSigner(address signer,bool shouldTrust,uint256 nonce)');
 
 	/// @dev EIP-712 types for a signature that executes a transaction
 	bytes32 public constant EXECUTE_HASH =
@@ -79,7 +81,9 @@ contract LilGnosis {
 
 		domainSeparator = keccak256(
 			abi.encode(
-				keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
+				keccak256(
+					'EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'
+				),
 				keccak256(bytes(name)),
 				keccak256(bytes('1')),
 				block.chainid,
@@ -133,7 +137,11 @@ contract LilGnosis {
 	/// @dev Make sure the signatures are sorted in ascending order by the signer's addresses! Otherwise the verification will fail
 	function setQuorum(uint256 _quorum, Signature[] calldata sigs) public payable {
 		bytes32 digest = keccak256(
-			abi.encodePacked('\x19\x01', domainSeparator, keccak256(abi.encode(QUORUM_HASH, _quorum, nonce++)))
+			abi.encodePacked(
+				'\x19\x01',
+				domainSeparator,
+				keccak256(abi.encode(QUORUM_HASH, _quorum, nonce++))
+			)
 		);
 
 		address previous;

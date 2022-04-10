@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import 'solmate/tokens/ERC20.sol';
+import { ERC20 } from 'solmate/tokens/ERC20.sol';
 
 /// @title lil superfluid
 /// @author Miguel Piedrafita
@@ -43,7 +43,11 @@ contract LilSuperfluid {
 	/// @param streamId The ID of the stream that was updated
 	/// @param paymentPerBlock The new payment rate for this stream
 	/// @param timeframe The new interval this stream will be active for
-	event StreamDetailsUpdated(uint256 indexed streamId, uint256 paymentPerBlock, Timeframe timeframe);
+	event StreamDetailsUpdated(
+		uint256 indexed streamId,
+		uint256 paymentPerBlock,
+		Timeframe timeframe
+	);
 
 	/// @dev Parameters for streams
 	/// @param sender The address of the creator of the stream
@@ -104,7 +108,9 @@ contract LilSuperfluid {
 	constructor() payable {
 		domainSeparator = keccak256(
 			abi.encode(
-				keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
+				keccak256(
+					'EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'
+				),
 				keccak256(bytes('LilSuperfluid')),
 				keccak256(bytes('1')),
 				block.chainid,

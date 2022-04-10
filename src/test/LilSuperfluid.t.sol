@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import './Hevm.sol';
-import 'ds-test/test.sol';
-import '../LilSuperfluid.sol';
+import { Vm } from 'forge-std/Vm.sol';
+import { DSTest } from 'ds-test/test.sol';
+import { ERC20 } from 'solmate/tokens/ERC20.sol';
+import { LilSuperfluid } from '../LilSuperfluid.sol';
 
 contract TestToken is ERC20('Test Token', 'TKN', 18) {
 	function mintTo(address recipient, uint256 amount) public payable {
@@ -15,22 +16,25 @@ contract User {}
 
 contract LilSuperfluidTest is DSTest {
 	User internal user;
-	Hevm internal hevm;
-	TestToken internal token;
-	LilSuperfluid internal lilSuperfluid;
 	uint256 internal privKey;
+	TestToken internal token;
+	Vm internal hevm = Vm(HEVM_ADDRESS);
+	LilSuperfluid internal lilSuperfluid;
 
 	event StreamCreated(LilSuperfluid.Stream stream);
 	event StreamRefueled(uint256 indexed streamId, uint256 amount);
 	event FundsWithdrawn(uint256 indexed streamId, uint256 amount);
 	event ExcessWithdrawn(uint256 indexed streamId, uint256 amount);
-	event StreamDetailsUpdated(uint256 indexed streamId, uint256 paymentPerBlock, LilSuperfluid.Timeframe timeframe);
+	event StreamDetailsUpdated(
+		uint256 indexed streamId,
+		uint256 paymentPerBlock,
+		LilSuperfluid.Timeframe timeframe
+	);
 
 	function setUp() public {
 		privKey = 0xa;
-		hevm = Hevm(HEVM_ADDRESS);
-		user = User(hevm.addr(privKey));
 		token = new TestToken();
+		user = User(hevm.addr(privKey));
 		lilSuperfluid = new LilSuperfluid();
 
 		token.mintTo(address(this), 1 ether);
@@ -59,7 +63,13 @@ contract LilSuperfluidTest is DSTest {
 			})
 		);
 
-		uint256 streamId = lilSuperfluid.streamTo(address(user), token, 1 ether, timeframe, 0.1 ether);
+		uint256 streamId = lilSuperfluid.streamTo(
+			address(user),
+			token,
+			1 ether,
+			timeframe,
+			0.1 ether
+		);
 
 		assertEq(streamId, 1);
 		assertEq(token.balanceOf(address(this)), 0);
@@ -272,9 +282,15 @@ contract LilSuperfluidTest is DSTest {
 			0.1 ether
 		);
 
-		(, , , , , uint256 initPaymentRate, LilSuperfluid.Timeframe memory initTimeframe) = lilSuperfluid.getStream(
-			streamId
-		);
+		(
+			,
+			,
+			,
+			,
+			,
+			uint256 initPaymentRate,
+			LilSuperfluid.Timeframe memory initTimeframe
+		) = lilSuperfluid.getStream(streamId);
 
 		assertEq(initPaymentRate, 0.1 ether);
 		assertEq(initTimeframe.startBlock, block.number);
@@ -311,9 +327,15 @@ contract LilSuperfluidTest is DSTest {
 		emit StreamDetailsUpdated(streamId, 0.5 ether, timeframe);
 		lilSuperfluid.updateDetails(streamId, 0.5 ether, timeframe, sig);
 
-		(, , , , , uint256 newPaymentRate, LilSuperfluid.Timeframe memory newTimeframe) = lilSuperfluid.getStream(
-			streamId
-		);
+		(
+			,
+			,
+			,
+			,
+			,
+			uint256 newPaymentRate,
+			LilSuperfluid.Timeframe memory newTimeframe
+		) = lilSuperfluid.getStream(streamId);
 
 		assertEq(newPaymentRate, 0.5 ether);
 		assertEq(newTimeframe.startBlock, timeframe.startBlock);
@@ -329,9 +351,15 @@ contract LilSuperfluidTest is DSTest {
 			0.1 ether
 		);
 
-		(, , , , , uint256 initPaymentRate, LilSuperfluid.Timeframe memory initTimeframe) = lilSuperfluid.getStream(
-			streamId
-		);
+		(
+			,
+			,
+			,
+			,
+			,
+			uint256 initPaymentRate,
+			LilSuperfluid.Timeframe memory initTimeframe
+		) = lilSuperfluid.getStream(streamId);
 
 		assertEq(initPaymentRate, 0.1 ether);
 		assertEq(initTimeframe.startBlock, block.number);
@@ -367,9 +395,15 @@ contract LilSuperfluidTest is DSTest {
 		hevm.expectRevert(abi.encodeWithSignature('Unauthorized()'));
 		lilSuperfluid.updateDetails(streamId, 0.5 ether, timeframe, sig);
 
-		(, , , , , uint256 newPaymentRate, LilSuperfluid.Timeframe memory newTimeframe) = lilSuperfluid.getStream(
-			streamId
-		);
+		(
+			,
+			,
+			,
+			,
+			,
+			uint256 newPaymentRate,
+			LilSuperfluid.Timeframe memory newTimeframe
+		) = lilSuperfluid.getStream(streamId);
 
 		assertEq(newPaymentRate, 0.1 ether);
 		assertEq(newTimeframe.startBlock, block.number);

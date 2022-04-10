@@ -1,21 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import './Hevm.sol';
-import '../LilENS.sol';
-import 'ds-test/test.sol';
+import { Vm } from 'forge-std/Vm.sol';
+import { LilENS } from '../LilENS.sol';
+import { DSTest } from 'ds-test/test.sol';
 
 contract User {}
 
 contract LilENSTest is DSTest {
 	User internal user;
-	Hevm internal hevm;
 	LilENS internal lilENS;
+	Vm internal hevm = Vm(HEVM_ADDRESS);
 
 	function setUp() public {
 		user = new User();
 		lilENS = new LilENS();
-		hevm = Hevm(HEVM_ADDRESS);
 	}
 
 	function testCanRegister() public {

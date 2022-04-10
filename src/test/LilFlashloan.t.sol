@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import './Hevm.sol';
-import 'ds-test/test.sol';
-import '../LilFlashloan.sol';
+import { stdError } from 'forge-std/stdlib.sol';
+import { Vm } from 'forge-std/Vm.sol';
+import { DSTest } from 'ds-test/test.sol';
+import { ERC20 } from 'solmate/tokens/ERC20.sol';
+import { LilFlashloan, FlashBorrower } from '../LilFlashloan.sol';
 
 contract User {}
 
@@ -50,10 +52,10 @@ contract TestReceiver is FlashBorrower, DSTest {
 
 contract LilFlashloanTest is DSTest {
 	User internal user;
-	Hevm internal hevm;
 	TestToken internal token;
 	TestReceiver internal receiver;
 	LilFlashloan internal lilFlashloan;
+	Vm internal hevm = Vm(HEVM_ADDRESS);
 
 	event FeeUpdated(ERC20 indexed token, uint256 fee);
 	event Withdrawn(ERC20 indexed token, uint256 amount);
@@ -63,7 +65,6 @@ contract LilFlashloanTest is DSTest {
 	function setUp() public {
 		user = new User();
 		token = new TestToken();
-		hevm = Hevm(HEVM_ADDRESS);
 		receiver = new TestReceiver();
 		lilFlashloan = new LilFlashloan();
 	}

@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import './Hevm.sol';
-import 'ds-test/test.sol';
-import '../LilFractional.sol';
-import 'solmate/tokens/ERC721.sol';
+import { Vm } from 'forge-std/Vm.sol';
+import { DSTest } from 'ds-test/test.sol';
+import { stdError } from 'forge-std/stdlib.sol';
+import { ERC721 } from 'solmate/tokens/ERC721.sol';
+import { LilFractional, NFTShare } from '../LilFractional.sol';
 
 contract User {}
 
@@ -25,8 +26,8 @@ contract TestNFT is ERC721('Test NFT', 'TEST') {
 contract LilFractionalTest is DSTest {
 	uint256 nftId;
 	User internal user;
-	Hevm internal hevm;
 	TestNFT internal nft;
+	Vm internal hevm = Vm(HEVM_ADDRESS);
 	LilFractional internal lilFractional;
 
 	event VaultCreated(LilFractional.Vault vault);
@@ -35,7 +36,6 @@ contract LilFractionalTest is DSTest {
 
 	function setUp() public {
 		user = new User();
-		hevm = Hevm(HEVM_ADDRESS);
 		nft = new TestNFT();
 		lilFractional = new LilFractional();
 
@@ -57,7 +57,12 @@ contract LilFractionalTest is DSTest {
 
 		uint256 vaultId = lilFractional.split(nft, nftId, 100 ether, 'Fractionalised NFT', 'FRAC');
 
-		(ERC721 nftContract, uint256 tokenId, uint256 supply, NFTShare tokenContract) = lilFractional.getVault(vaultId);
+		(
+			ERC721 nftContract,
+			uint256 tokenId,
+			uint256 supply,
+			NFTShare tokenContract
+		) = lilFractional.getVault(vaultId);
 
 		assertEq(nft.ownerOf(nftId), address(lilFractional));
 		assertEq(address(nftContract), address(nft));

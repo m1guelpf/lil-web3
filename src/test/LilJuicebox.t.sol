@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import './Hevm.sol';
-import 'ds-test/test.sol';
-import '../LilJuicebox.sol';
+import { Vm } from 'forge-std/Vm.sol';
+import { DSTest } from 'ds-test/test.sol';
+import { stdError } from 'forge-std/stdlib.sol';
+import { LilJuicebox, ProjectShare } from '../LilJuicebox.sol';
 
 contract User {}
 
 contract LilJuiceboxTest is DSTest {
 	User internal user;
-	Hevm internal hevm;
 	ProjectShare internal token;
 	LilJuicebox internal lilJuicebox;
+	Vm internal hevm = Vm(HEVM_ADDRESS);
 
 	event Renounced();
 	event Withdrawn(uint256 amount);
@@ -21,7 +22,6 @@ contract LilJuiceboxTest is DSTest {
 
 	function setUp() public {
 		user = new User();
-		hevm = Hevm(HEVM_ADDRESS);
 		lilJuicebox = new LilJuicebox('Test Crowdfund', 'TEST');
 		token = lilJuicebox.token();
 	}

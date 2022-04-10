@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import 'solmate/tokens/ERC20.sol';
-import 'solmate/utils/SafeTransferLib.sol';
+import { ERC20 } from 'solmate/tokens/ERC20.sol';
+import { SafeTransferLib } from 'solmate/utils/SafeTransferLib.sol';
 
 /// @title Project Share ERC20
 /// @author Miguel Piedrafita

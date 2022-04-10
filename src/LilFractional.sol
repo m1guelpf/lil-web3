@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import 'solmate/tokens/ERC20.sol';
-import 'solmate/tokens/ERC721.sol';
+import { ERC20 } from 'solmate/tokens/ERC20.sol';
+import { ERC721 } from 'solmate/tokens/ERC721.sol';
 
 /// @title NFT Share Token
 /// @author Miguel Piedrafita

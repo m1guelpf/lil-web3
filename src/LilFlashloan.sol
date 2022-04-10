@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import 'solmate/tokens/ERC20.sol';
+import { ERC20 } from 'solmate/tokens/ERC20.sol';
 
 /// @title Flash Borrower Interface
 /// @author Miguel Piedrafita
@@ -83,7 +83,8 @@ contract LilFlashloan {
 		token.transfer(address(receiver), amount);
 		receiver.onFlashLoan(token, amount, data);
 
-		if (currentBalance + getFee(token, amount) > token.balanceOf(address(this))) revert TokensNotReturned();
+		if (currentBalance + getFee(token, amount) > token.balanceOf(address(this)))
+			revert TokensNotReturned();
 	}
 
 	/// @notice Calculate the fee owed for the loaned tokens

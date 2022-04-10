@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import './Hevm.sol';
-import 'ds-test/test.sol';
-import '../LilOpenSea.sol';
-import 'solmate/tokens/ERC721.sol';
+import { Vm } from 'forge-std/Vm.sol';
+import { DSTest } from 'ds-test/test.sol';
+import { LilOpenSea } from '../LilOpenSea.sol';
+import { ERC721 } from 'solmate/tokens/ERC721.sol';
 
 contract User {
 	receive() external payable {}
@@ -27,9 +27,9 @@ contract TestNFT is ERC721('Test NFT', 'TEST') {
 contract LilOpenSeaTest is DSTest {
 	uint256 nftId;
 	User internal user;
-	Hevm internal hevm;
 	TestNFT internal nft;
 	LilOpenSea internal lilOpenSea;
+	Vm internal hevm = Vm(HEVM_ADDRESS);
 
 	event NewListing(LilOpenSea.Listing listing);
 	event ListingRemoved(LilOpenSea.Listing listing);
@@ -37,7 +37,6 @@ contract LilOpenSeaTest is DSTest {
 
 	function setUp() public {
 		user = new User();
-		hevm = Hevm(HEVM_ADDRESS);
 		nft = new TestNFT();
 		lilOpenSea = new LilOpenSea();
 
@@ -56,13 +55,19 @@ contract LilOpenSeaTest is DSTest {
 
 		hevm.expectEmit(false, false, false, true);
 		emit NewListing(
-			LilOpenSea.Listing({ tokenContract: nft, tokenId: nftId, askPrice: 1 ether, creator: address(this) })
+			LilOpenSea.Listing({
+				tokenContract: nft,
+				tokenId: nftId,
+				askPrice: 1 ether,
+				creator: address(this)
+			})
 		);
 		uint256 listingId = lilOpenSea.list(nft, nftId, 1 ether);
 
 		assertEq(nft.ownerOf(nftId), address(lilOpenSea));
 
-		(ERC721 tokenContract, uint256 tokenId, address creator, uint256 askPrice) = lilOpenSea.getListing(listingId);
+		(ERC721 tokenContract, uint256 tokenId, address creator, uint256 askPrice) = lilOpenSea
+			.getListing(listingId);
 
 		assertEq(address(tokenContract), address(nft));
 		assertEq(tokenId, nftId);
@@ -98,7 +103,12 @@ contract LilOpenSeaTest is DSTest {
 
 		hevm.expectEmit(false, false, false, true);
 		emit ListingRemoved(
-			LilOpenSea.Listing({ tokenContract: nft, tokenId: nftId, askPrice: 1 ether, creator: address(this) })
+			LilOpenSea.Listing({
+				tokenContract: nft,
+				tokenId: nftId,
+				askPrice: 1 ether,
+				creator: address(this)
+			})
 		);
 		lilOpenSea.cancelListing(listingId);
 
@@ -151,7 +161,12 @@ contract LilOpenSeaTest is DSTest {
 		hevm.expectEmit(true, false, false, true);
 		emit ListingBought(
 			address(this),
-			LilOpenSea.Listing({ tokenContract: nft, tokenId: nftId, askPrice: 1 ether, creator: address(user) })
+			LilOpenSea.Listing({
+				tokenContract: nft,
+				tokenId: nftId,
+				askPrice: 1 ether,
+				creator: address(user)
+			})
 		);
 		lilOpenSea.buyListing{ value: 1 ether }(listingId);
 
