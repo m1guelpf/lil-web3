@@ -10,7 +10,7 @@ lil web3 aims to build really simple, intentionally-limited versions of web3 pro
 
 lil ens contains a single function `register(string name)`, which allows an address to claim a name. \
 
-The key learning here is that the technical implementation of a namespace can be incredibly simple, and it's adoption (both of users and apps integrating with it) what makes it successful.
+The key learning here is that the technical implementation of a namespace can be incredibly simple, and its adoption (both of users and apps integrating with it) what makes it successful.
 
 If you're interested in a slightly more comprehensive ENS-like implementation, I also built a simplified version of the base ENS contracts (and tests for them) following the [ENS spec](https://eips.ethereum.org/EIPS/eip-137) as [a separate repo](https://github.com/m1guelpf/ens-contracts-blindrun).
 
@@ -70,7 +70,7 @@ lil gnosis allows you to define a set of approved signers and the number of requ
 
 > A simple token streaming implementation
 
-lil superfluid enables anyone to continously stream tokens to a user during an interval of blocks. You can call the `streamTo(address recipient, ERC20 token, uint256 initialBalance, Timeframe timeframe, uint256 paymentPerBlock)` function to send `paymentPerBlock` every block the stream is active for (between by `timeframe.startBlock` and `timeframe.stopBlock`) to `recipient`, locking `initialBalance` tokens to guarantee their delivery. Once created, the sender can increase the locked balance by calling the `refuel(uint256 streamId, uint256 amount)` function, and the receiver can withdraw their current balance at any time by calling `withdraw(uint256 streamId)`. Once the stream has ended, the sender can call `refund(uint256 streamId)` to withdraw any excess locked funds, and at any point any party can view their balance through `balanceOf(uint256 streamId, address who)`, or update the stream rate or timeframe through by providing an [EIP-712 signature](https://eips.ethereum.org/EIPS/eip-712) from the other party (certifying they approve of it) to the `updateDetails(uint256 streamId, uint256 paymentPerBlock, Timeframe timeframe, Signature sig)` function.
+lil superfluid enables anyone to continuously stream tokens to a user during an interval of blocks. You can call the `streamTo(address recipient, ERC20 token, uint256 initialBalance, Timeframe timeframe, uint256 paymentPerBlock)` function to send `paymentPerBlock` every block the stream is active for (between by `timeframe.startBlock` and `timeframe.stopBlock`) to `recipient`, locking `initialBalance` tokens to guarantee their delivery. Once created, the sender can increase the locked balance by calling the `refuel(uint256 streamId, uint256 amount)` function, and the receiver can withdraw their current balance at any time by calling `withdraw(uint256 streamId)`. Once the stream has ended, the sender can call `refund(uint256 streamId)` to withdraw any excess locked funds, and at any point any party can view their balance through `balanceOf(uint256 streamId, address who)`, or update the stream rate or timeframe through by providing an [EIP-712 signature](https://eips.ethereum.org/EIPS/eip-712) from the other party (certifying they approve of it) to the `updateDetails(uint256 streamId, uint256 paymentPerBlock, Timeframe timeframe, Signature sig)` function.
 
 > Note: Remember to call `approve(<lil superfluid address>, <amount>)` on the contract for the ERC20 before calling the `streamTo` and `refuel` functions 😉
 
